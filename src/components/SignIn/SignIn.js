@@ -17,8 +17,9 @@ class SignIn extends React.Component {
         this.setState({signInPassword: event.target.value})
     }
 
-    onSubmitSignIn = () => {
-        console.log('this button is called')
+    onSubmitSignIn = (event) => {
+        event.preventDefault();
+
         fetch('https://face-recognition-api-osku.onrender.com/signin', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
@@ -26,13 +27,21 @@ class SignIn extends React.Component {
                 email: this.state.signInEmail,
                 password:this.state.signInPassword
             })
-        }).then(response => response.json())
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(user => {
             if(user.id){
               this.props.loadUser(user);
               this.props.onRouteChange('home');
             }
           })
+          .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
         
     }
 
