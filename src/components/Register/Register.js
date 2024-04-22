@@ -23,14 +23,18 @@ class Register extends React.Component {
     }
 
     onSubmitSignIn = () => {
+        const { email, password, name } = this.state;
+
+        const data = {
+            email: email,
+            password: password,
+            name: name
+        };
+
         fetch('https://face-recognition-api-osku.onrender.com/register', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
-            body:JSON.stringify({
-                email: this.state.email,
-                password:this.state.password,
-                name: this.state.name
-            })
+            body:JSON.stringify(data)
         }).then(response => response.json())
             .then(user => {
                 if(user.id){
